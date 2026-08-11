@@ -1,0 +1,30 @@
+services:
+  new-api:
+    image: calciumion/new-api:latest
+    container_name: new-api
+    restart: always
+    command: --log-dir /app/logs
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - ./data:/data
+      - ./logs:/app/logs
+    environment:
+      - TZ=Asia/Shanghai
+      - SQL_DSN=${SQL_DSN:?SQL_DSN is required}
+      - REDIS_CONN_STRING=${REDIS_CONN_STRING:?REDIS_CONN_STRING is required}
+      - SESSION_SECRET=${SESSION_SECRET:?SESSION_SECRET is required}
+      - CRYPTO_SECRET=${CRYPTO_SECRET:?CRYPTO_SECRET is required}
+      - SESSION_COOKIE_SECURE=true
+      - SESSION_COOKIE_TRUSTED_URL=https://tokengateway.instantech.cn
+      - TRUSTED_PROXIES=127.0.0.1
+      - ERROR_LOG_ENABLED=true
+      - BATCH_UPDATE_ENABLED=true
+      - NODE_NAME=new-api-node-1
+    networks:
+      - new-api-network
+
+networks:
+  new-api-network:
+    external: true
+    name: new-api-network
